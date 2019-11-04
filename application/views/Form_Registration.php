@@ -50,7 +50,7 @@
                         >
                     </div>
                     <button type="submit" class="btn btn-primary">Register</button>
-                    <a href="<?php echo site_url('login/')?>" class="btn btn-success">Login</a>
+                    <a href="<?php echo site_url('C_User/login/')?>" class="btn btn-success">Login</a>
                 </form>
                 <!-- /Card-->
             </div>

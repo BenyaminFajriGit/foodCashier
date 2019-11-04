@@ -70,14 +70,14 @@ class C_Transact extends CI_Controller
     public function setStatusPaid($id_invoice)
     {
         $this->checkAdmin();
-        $data['invoice'] = $this->Model_Invoice->setStatusInvoice($id_invoice,'paid');
+        $this->Model_Invoice->setStatusInvoice($id_invoice,'paid');
         $this->session->set_flashdata('success', 'Confirmation is success!');
         redirect("C_Transact/showDetailInvoice/$id_invoice");
     }
     public function setStatusRejected($id_invoice)
     {
         $this->checkAdmin();
-        $data['invoice'] = $this->Model_Invoice->setStatusInvoice($id_invoice,'rejected');
+        $this->Model_Invoice->setStatusInvoice($id_invoice,'rejected');
         $this->session->set_flashdata('success', 'Rejected is success!');
         redirect("C_Transact/showDetailInvoice/$id_invoice");
     }

@@ -27,7 +27,7 @@
 
                 <div class="card mb-3">
                     <div class="card-header">
-                        <a href="<?php echo site_url('admin/products/') ?>">
+                        <a href="<?php echo site_url('C_Transact/listHistory/') ?>">
                             <i class="fas fa-arrow-left"></i>
                             back
                         </a>
@@ -38,7 +38,7 @@
                             <div class="form-group">
                                 <label for="name">Invoice Id</label>
                                 <input type="text" class="form-control <?php echo form_error('name') ? 'is-invalid' : '' ?>" name="id_invoice" value="<?php   if(!empty($id_invoice))echo $id_invoice!=0?$id_invoice:'';
-                                if(!empty($invoice))echo $invoice->id_invoice;?>">
+                                if(!empty($invoice))echo $invoice->id_invoice;?>" readonly>
                                 <div class="invalid-feedback">
                                     <?php
                                     echo form_error('name');

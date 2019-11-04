@@ -136,6 +136,6 @@ public function loginProcess(){
     
     public function logout(){
         $this->session->sess_destroy();
-        redirect(site_url('C_User/login'));
+        redirect('C_User/login');
     }
 }

@@ -14,6 +14,8 @@ class Model_Invoice extends CI_Model
     public $province;
     public $city;
     public $phone_number;
+    public $courier;
+    public $service;
     public $shipping_charge;
     public $proof;
 
@@ -21,42 +23,7 @@ class Model_Invoice extends CI_Model
     {
         parent::__construct();
     }
-    public function checkout_rules(){
-        return[
-            [
-                "field" => 'name',
-                "label" => 'Fullname',
-                "rules" => 'required'
-            ],
-            [
-                "field" => 'street_address',
-                "label" => 'Street Address',
-                'rules' => 'required'
-            ],
-            [
-                "field" => 'province_name',
-                "label" => 'Province Name',
-                "rules" => 'required'
-            ],
-            [
-                "field" => 'city_name',
-                "label" => 'City Name',
-                'rules' => 'required'
-            ],
-            [
-                "field" => 'phone_number',
-                "label" => 'Phone Number',
-                "rules" => 'required|numeric'
-            ],
-            [
-                "field" => 'cost',
-                "label" => 'Services',
-                'rules' => 'required'
-            ],
-            
-        ];
-    }
-
+    
 
     public function create_invoice()
     {
@@ -69,6 +36,8 @@ class Model_Invoice extends CI_Model
         $this->province = $this->input->post('province_name');
         $this->city = $this->input->post('city_name');
         $this->phone_number = $this->input->post('phone_number');
+        $this->courier = $this->input->post('courier');
+        $this->service = $this->input->post('service');
         $this->shipping_charge = $this->input->post('cost');
         $this->proof = 'default.jpg';
         $this->db->insert($this->_table, $this);
@@ -134,7 +103,7 @@ class Model_Invoice extends CI_Model
     }
     public function checkExpired (){
         $status='expired';
-        $invoices=$this->db->where('DATEDIFF(due_date,NOW())<=0')->get($this->_table)->result();
+        $invoices=$this->db->where("DATEDIFF(due_date,NOW())<=0 and status!='paid'")->get($this->_table)->result();
         foreach($invoices as $invoice){
             $this->db->update($this->_table,array('status'=>$status),array('id_invoice'=>$invoice->id_invoice));
         }

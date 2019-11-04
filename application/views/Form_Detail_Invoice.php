@@ -55,6 +55,8 @@
                                     Kota     :<br><?php echo $invoice->city?><hr>
                                     Provinsi :<br><?php echo $invoice->province?><hr>
                                     Telepon  :<br><?php echo $invoice->phone_number?><hr>
+                                    Kurir  :<br><?php echo $invoice->courier?><hr>
+                                    Layanan  :<br><?php echo $invoice->service?><hr>
                                 </div>
                             </div>
                         </div>

@@ -59,7 +59,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="province_name" name="province_name"  >
+                            <input type="text" id="province_name" name="province_name" hidden readonly>
 
                         </div>
                         <div class="form-group">
@@ -74,7 +74,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="city_name" name="city_name"  >
+                            <input type="text" id="city_name" name="city_name"  hidden >
 
                         </div>
                         <div class="form-group">
@@ -112,7 +112,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="service" name="service"  >
+                            <input type="text" id="service" name="service" hidden readonly>
 
                         </div>
                         <div class="form-group">
@@ -173,7 +173,8 @@
 
             });
             $('#cost').change(function() {
-                $('#service').val($('#cost option:selected').text());
+                var costSelected=$('#cost option:selected').text();
+                $('#service').val(costSelected.substr(0,costSelected.indexOf('harga')-1));
             });
             $('form').submit(function() {
                 

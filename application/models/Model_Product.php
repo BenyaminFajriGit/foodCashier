@@ -80,7 +80,7 @@ class Model_Product extends CI_Model
         $product= $this->getById($id);
         if($product->photo!="default.jpg"){
             $filename= explode(".",$product->photo)[0];
-            return array_map('unlink',glob(FCPATH."upload/product/$filename.*"));
+            array_map('unlink',glob(FCPATH."upload/product/$filename.*"));
         }
     }
 
@@ -92,7 +92,6 @@ class Model_Product extends CI_Model
             }
             
         }
-        return true;
     }
     
     public function search ($search){

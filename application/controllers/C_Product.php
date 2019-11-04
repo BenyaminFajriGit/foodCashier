@@ -138,14 +138,14 @@ class C_Product extends CI_Controller
     {
         if ($this->checkEditRules()) {
             $this->Model_Product->setProduct();
-            if($this->upload->display_errors()){
+            if (isset($this->upload)&&$this->upload->display_errors() ){
                 $this->session->set_flashdata('error', 'Input Should Follow Rules!' .$this->upload->display_errors());    
             }else{
                 $this->session->set_flashdata('success', 'Product is Successfully Updated');
             }
             
         } else {
-            $this->session->set_flashdata('error', 'Input Should Follow Rules!');
+            $this->session->set_flashdata('error', 'Input Should Follow Rules!'. validation_errors());
             redirect('C_Product/edit/');
         }
         redirect('C_Product/');
@@ -157,7 +157,7 @@ class C_Product extends CI_Controller
         $this->checkAdmin();
         $this->Model_Product->delete($id);
         $this->session->set_flashdata('success', 'Product is Successfully Deleted');
-        redirect(site_url('C_Product/'));
+        redirect('C_Product/');
     }
 
     //not below the new one edited
