@@ -30,3 +30,6 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /tests/tests/
 /tests/results/
 application/controllers/C_Product.php
+
+## Prevent server DB settings from changing
+application/config/database.php
