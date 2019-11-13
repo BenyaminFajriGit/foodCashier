@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-
+header('Content-type:application/json;charset=utf-8');
 class C_Transact extends CI_Controller
 {
     public function __construct()
@@ -47,8 +47,16 @@ class C_Transact extends CI_Controller
 
     public function showDetailInvoice($id_invoice)
     {
-        $data['invoice'] = $this->Model_Invoice->getInvoiceByID($id_invoice);
-        $data['orders'] = $this->Model_Order->getOrderByInvoice($data['invoice']->id_invoice);
+        $result = $this->Model_Invoice->getInvoiceByID($id_invoice);
+        if($result){
+            $data['status'] = true;
+            $data['message'] = "Data ditemukan!";
+            $data['invoice'] = $result;
+            $data['orders'] = $this->Model_Order->getOrderByInvoice($data['invoice']->id_invoice);
+        } else{
+            $data['status'] = false;
+            $data['message'] = "Data tidak ditemukan!";
+        }
         echo json_encode($data);
         
     }
