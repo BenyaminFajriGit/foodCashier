@@ -4,67 +4,68 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class C_Cart extends CI_Controller {
     public function __construct(){
         parent::__construct();
-        if($this->isSessionSet()){
-            $this->load->model('Model_Product');
-        }else{
-            $this->session->set_flashdata('error',"Please Login First!");
-            redirect('C_User/login/');
-        }
-
+            $this->load->model('Model_Menu');
+         
     }
-    public function index(){
-            $data['items']=$this->cart->contents()  ;
-            $this->load->view('Form_Cart',$data);
+
+    public function getAllItem(){
+            $data['result']=$this->cart->contents();
+            //if 0 item return array []
+            echo json_encode($data);
+            
 }
 
 
     public function addItem(){
+        //post kuantitas, id_menu menu,catatan
+        $id_menu=$this->input->post('id_menu');
+        $menu= $this->Model_Menu->getByID($id_menu);
         
-        $id_product=$this->input->post('id_product');
         if ($this->checkAddRules()) {
-            $product= $this->Model_Product->getByID($id_product);
-            if($this->isEnoughStock()){
-               
-                
-                $qty=$this->input->post('quantity');
-                    $data = array(
-                        'id'=> $product->id_product,
-                        'qty' => $this->input->post('quantity'),
-                        'price' => $product->price,
-                        'name' => $product->name,
-                        'weight' => $product->weight*$this->input->post('quantity'),
-                        'options' => array('note' => $this->input->post('note'))
+            if(!$menu){
+                $data['status']=false;
+                $data['error_message']="id_menu menu not found";
+                echo json_encode($data);
+                return;
+            }
+            if($this->isEnoughStock()){                
+                    $item = array(
+                        'id'=> $menu->id_menu,
+                        'qty' => $this->input->post('kuantitas'),
+                        'price' => $menu->harga,
+                        'name' => $menu->nama,
+                        'options' => array('note' => $this->input->post('catatan'))
             );
-                $this->cart->insert($data);
-                $this->session->set_flashdata('success',"product successfully added to cart!");
-                redirect('C_Product/listForCostumer/');
+                $this->cart->insert($item);
+                $data['status']=true;
             }else{
-                $this->session->set_flashdata('error',"this item available stock only $product->stock ");
-                redirect("C_Product/detailProduct/".$id_product);
+                $data['status']=false;
+                $data['error_message']="this item available stok only $menu->stok";
             }
         }else{
-            $this->session->set_flashdata('error',"Please follow rules for filling input!". validation_errors());
-                redirect("C_Product/detailProduct/".$id_product);
+            $data['status']=false;
+            $data['error_message']="Please follow rules for filling input!". validation_errors();
         }
+        echo json_encode($data);
        
 
     }
     public function checkAddRules(){
         $data=[
             [
-                "field" => 'quantity',
-                "label" => 'Quantity',
+                "field" => 'kuantitas',
+                "label" => 'Kuantitas',
                 "rules" => 'required|numeric'
             ],
             [
-                "field" => 'note',
-                "label" => 'Note',
+                "field" => 'catatan',
+                "label" => 'Catatan',
                 'rules' => 'required'
             ],
             [
-                "field" => 'id_product',
-                "label" => 'ID Product',
-                "rules" => 'required'
+                "field" => 'id_menu',
+                "label" => 'Id Menu',
+                "rules" => 'required|numeric'
             ],
         ];
         $validation = $this->form_validation;
@@ -73,43 +74,41 @@ class C_Cart extends CI_Controller {
     }
 
     public function isEnoughStock(){
-        $id_product=$this->input->post('id_product');
-        $qty=$this->input->post('quantity');
-        $product= $this->Model_Product->getByID($id_product);
+        $id_menu=$this->input->post('id_menu');
+        $qty=$this->input->post('kuantitas');
+        $menu= $this->Model_Menu->getByID($id_menu);
         $count=0;
         if($this->cart->total_items()>0){
 			foreach($this->cart->contents() as $item){
-				if($item['id']==$id_product){
+				if($item['id']==$id_menu){
                     $count+=$item['qty'];
 				}
             }
         }
-        if(($count+$qty)>$product->stock){
+        if(($count+$qty)>$menu->stok){
             return false;
         }
         return true;
     }
 
 
-    private function isSessionSet(){
-        if($this->session->userdata('username')){
-            return true;
-        }
-        return false;
-    }
+ 
 
 	public function delete_cart_item($rowid){
-        $data = array(
+        $item = array(
             'rowid' => "$rowid",
             'qty'   => 0
     );    
-    $this->cart->update($data);
-    redirect('C_Cart/');
+    $result=$this->cart->update($item);
+    $data['status']=$result;
+    echo json_encode($data);
+    
     }
     
 	public function destroyCart(){
-		$this->cart->destroy();
-		redirect('C_Product/listForCostumer');
+        $this->cart->destroy();
+        $data['status']=true;
+        echo json_encode($data);
 	}
 
     //not edited below
