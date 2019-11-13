@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+header('Content-type:application/json;charset=utf-8');
 class C_Cart extends CI_Controller {
     public function __construct(){
         parent::__construct();
