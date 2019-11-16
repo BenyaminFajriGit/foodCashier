@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-header('Content-type:application/json;charset=utf-8');
+header("Access-Control-Allow-Origin: *;Content-type:application/json;charset=utf-8");
 class C_Menu extends CI_Controller
 {
     public function __construct()
