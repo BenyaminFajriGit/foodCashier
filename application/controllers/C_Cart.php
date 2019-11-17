@@ -38,6 +38,7 @@ class C_Cart extends CI_Controller {
             );
                 $this->cart->insert($item);
                 $data['status']=true;
+		$data['content']=$this->cart->contents();
             }else{
                 $data['status']=false;
                 $data['error_message']="this item available stok only $menu->stok";
