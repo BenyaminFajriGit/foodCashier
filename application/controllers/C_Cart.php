@@ -10,6 +10,7 @@ class C_Cart extends CI_Controller {
 
     public function getAllItem(){
             $data['result']=$this->cart->contents();
+	    $data['total']=($this->cart->total());
             //if 0 item return array []
             echo json_encode($data);
             
