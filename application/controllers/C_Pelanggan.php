@@ -7,22 +7,57 @@ class C_Pelanggan extends CI_Controller {
         $this->load->model('Model_Pelanggan');
     }
 
+    /**
+     * Show Memeber by Username or All Members
+     * 
+     * @param   username
+     * @return  Array (JSON)
+     */
 
-    public function getAllPelanggan()
+    public function getPelanggan(String $username = null)
     {
-        $result = $this->Model_Pelanggan->getAllPelanggan();
-        if( $result){
-            $data['status']=true;
-            $data['result']=$result;
-            
+        if(!is_null($username))
+        {
+            $result = $this->Model_Pelanggan->getByUsername($username);
+            if($result){
+                $data['status']=true;
+                $data['result']=$result;
+                
+            }
+            else{
+                $data['status']=false;
+            }
+        }else{
+            $result = $this->Model_Pelanggan->getAllPelanggan();
+            if( $result){
+                $data['status']=true;
+                $data['result']=$result;
+                
+            }
+            else{
+                $data['status']=false;
+            }
         }
-        else{
-            $data['status']=false;
-        }
+
         echo json_encode($data);
     }
 
- 
+    /**
+     * Dispatch Action for ADD, UPDATE & DELETE Data
+     * 
+     * @param   method
+     * @param   username
+     * 
+     * @return  Array (JSON)
+     */
+    public function actions(String $method, String $username = null)
+    {
+        $data = $this->input->post();
+        $data['username'] = $username;
+        
+        $result['status'] = $this->Model_Pelanggan->dispatch($data, $method);
+        echo json_encode($result['status']);
+    }
 
     public function addPelanggan()
     {
@@ -52,20 +87,6 @@ class C_Pelanggan extends CI_Controller {
 
     //not below the new one edited
 
-
-    public function getByUsername($username)
-    {
-        $result = $this->Model_Pelanggan->getByUsername($username);
-        if( $result){
-            $data['status']=true;
-            $data['result']=$result;
-            
-        }
-        else{
-            $data['status']=false;
-        }
-        echo json_encode($data);
-    }
     public function search($search='')
     {
         $result = $this->Model_Pelanggan->search($search);
