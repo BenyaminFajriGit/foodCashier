@@ -59,32 +59,6 @@ class C_Pelanggan extends CI_Controller {
         echo json_encode($result['status']);
     }
 
-    public function addPelanggan()
-    {
-       
-        $data['status']=  $this->Model_Pelanggan->addPelanggan();
-        echo json_encode($data);
-    }
-
-
-
-    public function updatePelanggan()
-    {
-        $data['status']=  $this->Model_Pelanggan->updatePelanggan();       
-        echo json_encode($data);
-    }
-
-    
-
-
-    public function deletePelanggan($username)
-    {
-        
-        $data['status']=$this->Model_Pelanggan->deletePelanggan($username);
-        echo json_encode($data);
-        
-    }
-
     //not below the new one edited
 
     public function search($search='')

@@ -41,7 +41,7 @@ class Model_Pelanggan extends CI_Model
     {
         switch ($action)
         {
-            case 'ADD_PELANGGAN':
+            case 'add_pelanggan':
                 if($this->notAvailableUsername($data['username_pelanggan'])){
                     return false;
                 }
@@ -53,12 +53,16 @@ class Model_Pelanggan extends CI_Model
                 return $this->db->insert($this->_table, $new_data);
                 break;
 
-            case 'UPDATE_PELANGGAN':
+            case 'update_pelanggan':
                 $new_data['nama']= $data["nama"];
                 $new_data['no_hp']= $data["no_hp"];
                 $username = $data['username'];
                 
                 $this->db->set('nama', $new_data['nama'])->set('no_hp', $new_data['no_hp'])->where('username_pelanggan', $username)->update($this->_table);
+                return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
+
+            case 'delete_pelanggan':
+                $this->db->delete($this->_table,["username_pelanggan"=>$data['username']]);
                 return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
         }
     }
@@ -99,11 +103,6 @@ class Model_Pelanggan extends CI_Model
         }
         return $potongan;
 
-    }
-    public function deletePelanggan($username_pelanggan)
-    {
-        $this->db->delete($this->_table,array("username_pelanggan"=>$username_pelanggan));
-        return ($this->db->affected_rows() > 0) ? TRUE : FALSE; 
     }
 
     public function search ($search){
