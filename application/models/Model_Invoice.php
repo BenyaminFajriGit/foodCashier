@@ -21,6 +21,9 @@ class Model_Invoice extends CI_Model
     {
         $this->username_pelanggan = $this->input->post('username_pelanggan');
         $this->username_staff = $this->input->post('username_staff');
+		if($this->username_pelanggan==""){
+		$this->username_pelanggan = NULL;
+		}
         $this->tanggal = date('Y-m-d H:i:s');
         $this->potongan = 0;
         $this->db->insert($this->_table, $this);
