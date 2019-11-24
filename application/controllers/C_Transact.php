@@ -80,6 +80,7 @@ class C_Transact extends CI_Controller
                 $this->Model_Invoice->setPotongan($invoice->id_invoice,$data['use_poin']);
             }
             $data['status']=true;
+			$data['id_invoice']=$invoice->id_invoice;
             $this->cart->destroy();
             echo json_encode($data);
     }
