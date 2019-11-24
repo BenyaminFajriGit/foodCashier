@@ -7,65 +7,60 @@ class C_Pelanggan extends CI_Controller {
         $this->load->model('Model_Pelanggan');
     }
 
+    /**
+     * Show Memeber by Username or All Members
+     * 
+     * @param   username
+     * @return  Array (JSON)
+     */
 
-    public function getAllPelanggan()
+    public function getPelanggan(String $username = null)
     {
-        $result = $this->Model_Pelanggan->getAllPelanggan();
-        if( $result){
-            $data['status']=true;
-            $data['result']=$result;
-            
+        if(!is_null($username))
+        {
+            $result = $this->Model_Pelanggan->getByUsername($username);
+            if($result){
+                $data['status']=true;
+                $data['result']=$result;
+                
+            }
+            else{
+                $data['status']=false;
+            }
+        }else{
+            $result = $this->Model_Pelanggan->getAllPelanggan();
+            if( $result){
+                $data['status']=true;
+                $data['result']=$result;
+                
+            }
+            else{
+                $data['status']=false;
+            }
         }
-        else{
-            $data['status']=false;
-        }
+
         echo json_encode($data);
     }
 
- 
-
-    public function addPelanggan()
+    /**
+     * Dispatch Action for ADD, UPDATE & DELETE Data
+     * 
+     * @param   method
+     * @param   username
+     * 
+     * @return  Array (JSON)
+     */
+    public function actions(String $method, String $username = null)
     {
-       
-        $data['status']=  $this->Model_Pelanggan->addPelanggan();
-        echo json_encode($data);
-    }
-
-
-
-    public function updatePelanggan()
-    {
-        $data['status']=  $this->Model_Pelanggan->updatePelanggan();       
-        echo json_encode($data);
-    }
-
-    
-
-
-    public function deletePelanggan($username)
-    {
+        $data = $this->input->post();
+        $data['username'] = $username;
         
-        $data['status']=$this->Model_Pelanggan->deletePelanggan($username);
-        echo json_encode($data);
-        
+        $result['status'] = $this->Model_Pelanggan->dispatch($data, $method);
+        echo json_encode($result['status']);
     }
 
     //not below the new one edited
 
-
-    public function getByUsername($username)
-    {
-        $result = $this->Model_Pelanggan->getByUsername($username);
-        if( $result){
-            $data['status']=true;
-            $data['result']=$result;
-            
-        }
-        else{
-            $data['status']=false;
-        }
-        echo json_encode($data);
-    }
     public function search($search='')
     {
         $result = $this->Model_Pelanggan->search($search);

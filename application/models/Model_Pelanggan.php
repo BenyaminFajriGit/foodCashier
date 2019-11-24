@@ -9,40 +9,66 @@ class Model_Pelanggan extends CI_Model
     public $no_hp;
     public $jml_point;
 
-    
-
+    /**
+     * Get All Pelanggan
+     * 
+     * @return Array
+     */
     public function getAllPelanggan()
     {
         return $this->db->get($this->_table)->result();
     }
-    public function getByUsername ($username_pelanggan)
+
+    /**
+     * Get Pelanggan by Username
+     * @param   username_pelanggan
+     * 
+     * @return  Array
+     */
+    public function getByUsername (String $username_pelanggan)
     {
         return $this->db->get_where($this->_table,["username_pelanggan" => $username_pelanggan])->row();
     }
-    public function addPelanggan ()
+
+    /**
+     * Dispatch for ADD, UPDATE & DELETE Data Pelanggan
+     * @param   data
+     * @param   action
+     * 
+     * @return  Array
+     */
+    public function dispatch(Array $data, String $action)
     {
-        $post = $this->input->post();
-        $this->username_pelanggan= $post["username_pelanggan"];
-        if($this->notAvailableUsername($this->username_pelanggan)){
-            return false;
+        switch ($action)
+        {
+            case 'add_pelanggan':
+                if($this->notAvailableUsername($data['username_pelanggan'])){
+                    return false;
+                }
+                $new_data['username_pelanggan'] = $data['username_pelanggan'];
+                $new_data['nama'] = $data['nama'];
+                $new_data['no_hp'] = $data['no_hp'];
+                $new_data['jml_point'] = 0;
+
+                return $this->db->insert($this->_table, $new_data);
+                break;
+
+            case 'update_pelanggan':
+                $new_data['nama']= $data["nama"];
+                $new_data['no_hp']= $data["no_hp"];
+                $username = $data['username'];
+                
+                $this->db->set('nama', $new_data['nama'])->set('no_hp', $new_data['no_hp'])->where('username_pelanggan', $username)->update($this->_table);
+                return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
+
+            case 'delete_pelanggan':
+                $this->db->delete($this->_table,["username_pelanggan"=>$data['username']]);
+                return ($this->db->affected_rows() > 0) ? TRUE : FALSE;
         }
-        $this->nama=$post['nama'];
-        $this->no_hp= $post['no_hp'];
-        $this->jml_point= 0;
-        return $this->db->insert($this->_table,$this);
     }
+
     private function notAvailableUsername($username_pelanggan){
         return $this->db->get_where($this->_table,array('username_pelanggan'=>$username_pelanggan))->row();
-    }
-    public function updatePelanggan()
-    {
-        
-        $post = $this->input->post();
-        $this->username_pelanggan= $post["username_pelanggan"];
-        $this->nama=$post['nama'];
-        $this->no_hp= $post['no_hp'];    
-        $this->db->set('nama', $this->nama)->set('no_hp', $this->no_hp)->where('username_pelanggan', $this->username_pelanggan)->update($this->_table);
-        return ($this->db->affected_rows() > 0) ? TRUE : FALSE; 
     }
 
     public function updatePoin($username_pelanggan,$total)
@@ -77,11 +103,6 @@ class Model_Pelanggan extends CI_Model
         }
         return $potongan;
 
-    }
-    public function deletePelanggan($username_pelanggan)
-    {
-        $this->db->delete($this->_table,array("username_pelanggan"=>$username_pelanggan));
-        return ($this->db->affected_rows() > 0) ? TRUE : FALSE; 
     }
 
     public function search ($search){
