@@ -32,7 +32,7 @@ class Model_Invoice extends CI_Model
     }
     public function getAllInvoices()
     {
-        $hasil = $this->db->select('invoice.*,SUM(orders.kuantitas*menu.harga) AS total, (SUM(orders.kuantitas*menu.harga)-potongan) as setelah_potongan')->from('invoice')->join('orders', 'orders.id_invoice=invoice.id_invoice')->join('menu', 'orders.id_menu=menu.id_menu')->group_by('orders.id_invoice')->get();
+        $hasil = $this->db->select('invoice.*,SUM(orders.kuantitas*menu.harga) AS total, (SUM(orders.kuantitas*menu.harga)-potongan) as setelah_potongan')->from('invoice')->join('orders', 'orders.id_invoice=invoice.id_invoice')->join('menu', 'orders.id_menu=menu.id_menu')->group_by('orders.id_invoice')->order_by('invoice.tanggal',"desc")->get();
 
         if ($hasil->num_rows() > 0) {
             return $hasil->result();
